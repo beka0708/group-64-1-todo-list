@@ -1,7 +1,10 @@
+# Реляционные (SQL) | Нереляционные (NoSQL)
+
 import sqlite3
 
 from config import path_db
 from db import queries
+
 
 
 def init_db():
@@ -11,3 +14,21 @@ def init_db():
     # cursor.execute('select * from tasks')
     conn.commit()                       # Зафиксировать измения в БД
     conn.close()                        # Закрываем соедение
+
+
+def add_task(task):
+    conn = sqlite3.connect(path_db)
+    cursor = conn.cursor()        
+    cursor.execute(queries.insert_task, (task, ))
+    conn.commit()
+    task_id = cursor.lastrowid
+    conn.close()                        
+    return task_id
+
+
+def update_task(task_id, new_task):
+    conn = sqlite3.connect(path_db)
+    cursor = conn.cursor()        
+    cursor.execute(queries.update_task, (new_task, task_id))
+    conn.commit()
+    conn.close()                        
